@@ -18,6 +18,9 @@ namespace Darkness_Becomes_You
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        public KeyboardState currentKeyState;
+        public KeyboardState oldKeyState;
+
         public Sprite playerSprite;
         public Texture2D playerTexture;
 
@@ -70,15 +73,42 @@ namespace Darkness_Becomes_You
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            // TODO: Add your update logic here
+            currentKeyState = Keyboard.GetState();
+
+            if (oldKeyState == null)
+                oldKeyState = currentKeyState;
+
+
+            if (currentKeyState.IsKeyDown(Keys.Escape))
+            {
+                this.Exit();
+            }
+
+            if (currentKeyState.IsKeyDown(Keys.W))
+            {
+                playerSprite.UpperLeft = playerSprite.UpperLeft + new Vector2(0, -5);
+            }
+
+            if (currentKeyState.IsKeyDown(Keys.S))
+            {
+                playerSprite.UpperLeft = playerSprite.UpperLeft + new Vector2(0, 5);
+            }
+
+            if (currentKeyState.IsKeyDown(Keys.A))
+            {
+                playerSprite.UpperLeft = playerSprite.UpperLeft + new Vector2(-5, 0);
+            }
+
+            if (currentKeyState.IsKeyDown(Keys.D))
+            {
+                playerSprite.UpperLeft = playerSprite.UpperLeft + new Vector2(5, 0);
+            }
+
+            oldKeyState = currentKeyState;
 
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.White);
