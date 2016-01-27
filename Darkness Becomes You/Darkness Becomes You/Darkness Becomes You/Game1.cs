@@ -24,6 +24,11 @@ namespace Darkness_Becomes_You
         public Sprite playerSprite;
         public Texture2D playerTexture;
 
+        public Sprite playerBulletSprite;
+        public Texture2D playerBulletTexture;
+        public LinkedList<Sprite> playerBullets = new LinkedList<Sprite>();
+        public int playerShotCooldown;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -46,6 +51,7 @@ namespace Darkness_Becomes_You
             graphics.ApplyChanges();
 
             playerTexture = this.Content.Load<Texture2D>("Textures\\Player");
+            playerBulletTexture = this.Content.Load<Texture2D>("Textures\\Bullet");
 
             playerSprite = new Sprite();
             playerSprite.UpperLeft = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
@@ -104,6 +110,25 @@ namespace Darkness_Becomes_You
                 playerSprite.UpperLeft = playerSprite.UpperLeft + new Vector2(5, 0);
             }
 
+            if (currentKeyState.IsKeyDown(Keys.Space))
+            {
+                if (playerShotCooldown == 0)
+                {
+                    playerBulletSprite = new Sprite();
+                    playerBulletSprite.SetTexture(playerBulletTexture);
+                    playerBulletSprite.UpperLeft = new Vector2(playerSprite.UpperLeft.X + (playerSprite.GetWidth() / 2) - (playerBulletSprite.GetWidth() / 2), playerSprite.UpperLeft.Y);
+                    playerBulletSprite.SetSpeedAndDirection(10, 90);
+
+                    playerBullets.AddLast(playerBulletSprite);
+
+                    playerShotCooldown = 30;
+                }
+                else
+                    playerShotCooldown -= 1;
+
+            }
+
+
             oldKeyState = currentKeyState;
 
             base.Update(gameTime);
@@ -116,6 +141,12 @@ namespace Darkness_Becomes_You
             spriteBatch.Begin();
 
             playerSprite.Draw(spriteBatch);
+
+            foreach (Sprite bullet in playerBullets)
+            {
+                bullet.MoveAndVanish(1920, 1080);
+                bullet.Draw(spriteBatch);
+            }
 
             spriteBatch.End();
 
