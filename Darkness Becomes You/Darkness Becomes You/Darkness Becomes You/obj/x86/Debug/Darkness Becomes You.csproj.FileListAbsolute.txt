@@ -1,0 +1,6 @@
+C:\Users\Nye\Dropbox\Programming\C#\Programs\Darkness-Becomes-You\Darkness Becomes You\Darkness Becomes You\Darkness Becomes You\bin\x86\Debug\Darkness Becomes You.exe
+C:\Users\Nye\Dropbox\Programming\C#\Programs\Darkness-Becomes-You\Darkness Becomes You\Darkness Becomes You\Darkness Becomes You\bin\x86\Debug\Darkness Becomes You.pdb
+C:\Users\Nye\Dropbox\Programming\C#\Programs\Darkness-Becomes-You\Darkness Becomes You\Darkness Becomes You\Darkness Becomes You\obj\x86\Debug\Darkness Becomes You.csprojResolveAssemblyReference.cache
+C:\Users\Nye\Dropbox\Programming\C#\Programs\Darkness-Becomes-You\Darkness Becomes You\Darkness Becomes You\Darkness Becomes You\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\Nye\Dropbox\Programming\C#\Programs\Darkness-Becomes-You\Darkness Becomes You\Darkness Becomes You\Darkness Becomes You\obj\x86\Debug\Darkness Becomes You.exe
+C:\Users\Nye\Dropbox\Programming\C#\Programs\Darkness-Becomes-You\Darkness Becomes You\Darkness Becomes You\Darkness Becomes You\obj\x86\Debug\Darkness Becomes You.pdb
