@@ -9,12 +9,17 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
+using SpriteLibrary;
+
 namespace Darkness_Becomes_You
 {
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        public Sprite playerSprite;
+        public Texture2D playerTexture;
 
         public Game1()
         {
@@ -36,6 +41,12 @@ namespace Darkness_Becomes_You
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
             graphics.ApplyChanges();
+
+            playerTexture = this.Content.Load<Texture2D>("Textures\\Player");
+
+            playerSprite = new Sprite();
+            playerSprite.UpperLeft = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
+            playerSprite.SetTexture(playerTexture);
 
         }
 
@@ -73,6 +84,8 @@ namespace Darkness_Becomes_You
             GraphicsDevice.Clear(Color.White);
 
             spriteBatch.Begin();
+
+            playerSprite.Draw(spriteBatch);
 
             spriteBatch.End();
 
