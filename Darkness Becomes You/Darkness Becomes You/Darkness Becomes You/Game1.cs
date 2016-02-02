@@ -29,6 +29,11 @@ namespace Darkness_Becomes_You
         public LinkedList<Sprite> playerBullets = new LinkedList<Sprite>();
         public int playerShotCooldown;
 
+        public LinkedList<Sprite> activeEnemies = new LinkedList<Sprite>();
+
+        public Sprite enemyISprite;
+        public Texture2D enemyITexture;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -52,10 +57,25 @@ namespace Darkness_Becomes_You
 
             playerTexture = this.Content.Load<Texture2D>("Textures\\Player");
             playerBulletTexture = this.Content.Load<Texture2D>("Textures\\Bullet");
+            enemyITexture = this.Content.Load<Texture2D>("Textures\\Enemy1");
 
             playerSprite = new Sprite();
             playerSprite.UpperLeft = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
             playerSprite.SetTexture(playerTexture);
+
+            enemyISprite = new Sprite();
+            enemyISprite.SetTexture(enemyITexture);
+            enemyISprite.SetSpeedAndDirection(1, -90);
+            enemyISprite.UpperLeft = new Vector2(1920 / 3, 1080 / 4);
+            activeEnemies.AddLast(enemyISprite);
+
+            enemyISprite = new Sprite();
+            enemyISprite.SetTexture(enemyITexture);
+            enemyISprite.SetSpeedAndDirection(1, -90);
+            enemyISprite.UpperLeft = new Vector2((1920 / 3) * 2, 1080 / 4);
+            activeEnemies.AddLast(enemyISprite);
+
+
 
         }
 
@@ -141,6 +161,12 @@ namespace Darkness_Becomes_You
             spriteBatch.Begin();
 
             playerSprite.Draw(spriteBatch);
+
+            foreach (Sprite enemy in activeEnemies)
+            {
+                enemy.MoveAndVanish(1920, 1080);
+                enemy.Draw(spriteBatch);
+            }
 
             foreach (Sprite bullet in playerBullets)
             {

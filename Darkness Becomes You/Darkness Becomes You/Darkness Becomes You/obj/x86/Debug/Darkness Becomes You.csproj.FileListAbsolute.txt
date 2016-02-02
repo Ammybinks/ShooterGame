@@ -6,3 +6,4 @@ C:\Users\Nye\Dropbox\Programming\C#\Programs\Darkness-Becomes-You\Darkness Becom
 C:\Users\Nye\Dropbox\Programming\C#\Programs\Darkness-Becomes-You\Darkness Becomes You\Darkness Becomes You\Darkness Becomes You\obj\x86\Debug\Darkness Becomes You.pdb
 C:\Users\Nye\Dropbox\Programming\C#\Programs\Darkness-Becomes-You\Darkness Becomes You\Darkness Becomes You\Darkness Becomes You\bin\x86\Debug\Content\Textures\Player.xnb
 C:\Users\Nye\Dropbox\Programming\C#\Programs\Darkness-Becomes-You\Darkness Becomes You\Darkness Becomes You\Darkness Becomes You\bin\x86\Debug\Content\Textures\Bullet.xnb
+C:\Users\Nye\Dropbox\Programming\C#\Programs\Darkness-Becomes-You\Darkness Becomes You\Darkness Becomes You\Darkness Becomes You\bin\x86\Debug\Content\Textures\Enemy1.xnb

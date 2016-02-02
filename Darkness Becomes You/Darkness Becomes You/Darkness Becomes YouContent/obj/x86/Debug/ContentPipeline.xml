@@ -19,6 +19,15 @@
       <Output>C:\Users\Nye\Dropbox\Programming\C#\Programs\Darkness-Becomes-You\Darkness Becomes You\Darkness Becomes You\Darkness Becomes You\bin\x86\Debug\Content\Textures\Bullet.xnb</Output>
       <Time>2016-01-27T16:09:01+00:00</Time>
     </Item>
+    <Item>
+      <Source>Textures\Enemy1.png</Source>
+      <Name>Textures\Enemy1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Nye\Dropbox\Programming\C#\Programs\Darkness-Becomes-You\Darkness Becomes You\Darkness Becomes You\Darkness Becomes You\bin\x86\Debug\Content\Textures\Enemy1.xnb</Output>
+      <Time>2016-02-02T04:15:44+00:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <TargetPlatform>Windows</TargetPlatform>
