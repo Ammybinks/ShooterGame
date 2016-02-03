@@ -1,3 +1,4 @@
 Content\Textures\Player.xnb
-Content\Textures\Bullet.xnb
 Content\Textures\Enemy1.xnb
+Content\Textures\PlayerBullet.xnb
+Content\Textures\EnemyBullet.xnb

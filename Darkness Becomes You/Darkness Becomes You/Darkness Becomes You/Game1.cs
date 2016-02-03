@@ -24,15 +24,21 @@ namespace Darkness_Becomes_You
         public Sprite playerSprite;
         public Texture2D playerTexture;
 
+        public LinkedList<Sprite> playerBullets = new LinkedList<Sprite>();
+
         public Sprite playerBulletSprite;
         public Texture2D playerBulletTexture;
-        public LinkedList<Sprite> playerBullets = new LinkedList<Sprite>();
         public int playerShotCooldown;
 
         public LinkedList<Sprite> activeEnemies = new LinkedList<Sprite>();
 
         public Sprite enemyISprite;
         public Texture2D enemyITexture;
+
+        public LinkedList<Sprite> enemyBullets = new LinkedList<Sprite>();
+
+        public Sprite enemyBulletSprite;
+        public Texture2D enemyBulletTexture;
 
         public Game1()
         {
@@ -56,23 +62,27 @@ namespace Darkness_Becomes_You
             graphics.ApplyChanges();
 
             playerTexture = this.Content.Load<Texture2D>("Textures\\Player");
-            playerBulletTexture = this.Content.Load<Texture2D>("Textures\\Bullet");
+            playerBulletTexture = this.Content.Load<Texture2D>("Textures\\PlayerBullet");
             enemyITexture = this.Content.Load<Texture2D>("Textures\\Enemy1");
+            enemyBulletTexture = this.Content.Load<Texture2D>("Textures\\EnemyBullet");
 
             playerSprite = new Sprite();
             playerSprite.UpperLeft = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
+            playerSprite.firingDelay = 30;
             playerSprite.SetTexture(playerTexture);
 
             enemyISprite = new Sprite();
             enemyISprite.SetTexture(enemyITexture);
             enemyISprite.SetSpeedAndDirection(1, -90);
             enemyISprite.UpperLeft = new Vector2(1920 / 3, 1080 / 4);
+            enemyISprite.firingDelay = 120;
             activeEnemies.AddLast(enemyISprite);
 
             enemyISprite = new Sprite();
             enemyISprite.SetTexture(enemyITexture);
             enemyISprite.SetSpeedAndDirection(1, -90);
             enemyISprite.UpperLeft = new Vector2((1920 / 3) * 2, 1080 / 4);
+            enemyISprite.firingDelay = 120;
             activeEnemies.AddLast(enemyISprite);
 
 
@@ -132,7 +142,7 @@ namespace Darkness_Becomes_You
 
             if (currentKeyState.IsKeyDown(Keys.Space))
             {
-                if (playerShotCooldown == 0)
+                if (playerSprite.firingTimer <= 0)
                 {
                     playerBulletSprite = new Sprite();
                     playerBulletSprite.SetTexture(playerBulletTexture);
@@ -141,13 +151,29 @@ namespace Darkness_Becomes_You
 
                     playerBullets.AddLast(playerBulletSprite);
 
-                    playerShotCooldown = 30;
+                    playerSprite.firingTimer = playerSprite.firingDelay - 1;
                 }
-                else
-                    playerShotCooldown -= 1;
-
             }
 
+            foreach (Sprite enemy in activeEnemies)
+            {
+                if (enemy.IsAlive)
+                {
+                    if (enemy.firingTimer == 0)
+                    {
+                        enemyBulletSprite = new Sprite();
+                        enemyBulletSprite.SetTexture(enemyBulletTexture);
+                        enemyBulletSprite.UpperLeft = new Vector2(enemy.UpperLeft.X + (enemy.GetWidth() / 2) - (enemyBulletSprite.GetWidth() / 2), enemy.UpperLeft.Y + enemy.GetHeight());
+                        enemyBulletSprite.SetSpeedAndDirection(-5, -270);
+
+                        enemyBullets.AddLast(enemyBulletSprite);
+
+                        enemy.firingTimer = enemy.firingDelay + 1;
+                    }
+                    enemy.firingTimer -= 1;
+                }
+            }
+            playerSprite.firingTimer -= 1;
 
             oldKeyState = currentKeyState;
 
@@ -164,14 +190,34 @@ namespace Darkness_Becomes_You
 
             foreach (Sprite enemy in activeEnemies)
             {
-                enemy.MoveAndVanish(1920, 1080);
                 enemy.Draw(spriteBatch);
+            }
+
+            foreach (Sprite bullet in enemyBullets)
+            {
+                bullet.MoveAndVanish(1920, 1080);
+                bullet.Draw(spriteBatch);
+
+                if (bullet.IsCollided(playerSprite))
+                {
+                    bullet.IsAlive = false;
+                    playerSprite.IsAlive = false;
+                }
             }
 
             foreach (Sprite bullet in playerBullets)
             {
                 bullet.MoveAndVanish(1920, 1080);
                 bullet.Draw(spriteBatch);
+
+                foreach (Sprite enemy in activeEnemies)
+                {
+                    if (bullet.IsCollided(enemy))
+                    {
+                        bullet.IsAlive = false;
+                        enemy.IsAlive = false;
+                    }
+                }
             }
 
             spriteBatch.End();

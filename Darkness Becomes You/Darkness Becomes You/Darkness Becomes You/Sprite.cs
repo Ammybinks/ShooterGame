@@ -29,6 +29,9 @@ namespace SpriteLibrary
 {
     public class Sprite
     {
+        public int firingDelay = 0;
+        public int firingTimer = 0;
+
         // upper-left coordinate of the sprite image on the screen
         public Vector2 UpperLeft;
 

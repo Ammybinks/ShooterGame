@@ -49,8 +49,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\Bullet.png">
-      <Name>Bullet</Name>
+    <Compile Include="Textures\PlayerBullet.png">
+      <Name>PlayerBullet</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -58,6 +58,13 @@
   <ItemGroup>
     <Compile Include="Textures\Enemy1.png">
       <Name>Enemy1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\EnemyBullet.png">
+      <Name>EnemyBullet</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
