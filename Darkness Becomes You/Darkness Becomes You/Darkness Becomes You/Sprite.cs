@@ -29,8 +29,18 @@ namespace SpriteLibrary
 {
     public class Sprite
     {
-        public int firingDelay = 0;
-        public int firingTimer = 0;
+        public int firingDelay;
+        public int firingTimer;
+        public int firingSpeed;
+        public int firingDirection;
+
+        public int patternNum;
+
+        public double[] movementPatterns;
+        public double[] movementSpeeds;
+        public double[] movementTimings;
+        public bool[] uniqueMovements;
+        public bool[] movementRotation;
 
         // upper-left coordinate of the sprite image on the screen
         public Vector2 UpperLeft;

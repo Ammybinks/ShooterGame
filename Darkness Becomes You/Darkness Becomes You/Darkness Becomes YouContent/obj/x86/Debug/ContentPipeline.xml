@@ -37,6 +37,15 @@
       <Output>C:\Users\Nye\Dropbox\Programming\C#\Programs\Darkness-Becomes-You\Darkness Becomes You\Darkness Becomes You\Darkness Becomes You\bin\x86\Debug\Content\Textures\EnemyBullet.xnb</Output>
       <Time>2016-02-03T14:44:16+00:00</Time>
     </Item>
+    <Item>
+      <Source>Fonts\Calibri.spritefont</Source>
+      <Name>Fonts\Calibri</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Nye\Dropbox\Programming\C#\Programs\Darkness-Becomes-You\Darkness Becomes You\Darkness Becomes You\Darkness Becomes You\bin\x86\Debug\Content\Fonts\Calibri.xnb</Output>
+      <Time>2016-02-10T18:16:50.5857503+00:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <TargetPlatform>Windows</TargetPlatform>
