@@ -18,43 +18,38 @@ namespace Darkness_Becomes_You
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public LinkedList<LinkedList<LinkedList<Sprite>>> activeSprites = new LinkedList<LinkedList<LinkedList<Sprite>>>();
+        LinkedList<LinkedList<LinkedList<Sprite>>> activeSprites = new LinkedList<LinkedList<LinkedList<Sprite>>>();
 
-        public LinkedList<LinkedList<Sprite>> activeFriendlies = new LinkedList<LinkedList<Sprite>>();
+        LinkedList<LinkedList<Sprite>> activeFriendlies = new LinkedList<LinkedList<Sprite>>();
+        LinkedList<Sprite> activePlayers = new LinkedList<Sprite>();
 
-        public LinkedList<Sprite> activePlayers = new LinkedList<Sprite>();
 
-        public LinkedList<LinkedList<Sprite>> activeBullets = new LinkedList<LinkedList<Sprite>>();
+        LinkedList<LinkedList<Sprite>> activeEnemies = new LinkedList<LinkedList<Sprite>>();
+        LinkedList<Sprite> activeEnemies1 = new LinkedList<Sprite>();
 
-        public LinkedList<Sprite> friendlyBullets = new LinkedList<Sprite>();
-        public LinkedList<Sprite> enemyBullets = new LinkedList<Sprite>();
-
-        public LinkedList<LinkedList<Sprite>> activeEnemies = new LinkedList<LinkedList<Sprite>>();
-
-        public LinkedList<Sprite> activeEnemy1 = new LinkedList<Sprite>();
-
+        LinkedList<LinkedList<Sprite>> activeBullets = new LinkedList<LinkedList<Sprite>>();
+        LinkedList<Sprite> friendlyBullets = new LinkedList<Sprite>();
+        LinkedList<Sprite> enemyBullets = new LinkedList<Sprite>();
 
         public SpriteFont Calibri;
-
 
         public KeyboardState currentKeyState;
         public KeyboardState oldKeyState;
 
+        public int lastSpriteCode = 0;
 
-        public Friendly playerSprite;
+        public Player playerSprite;
         public Texture2D playerTexture;
-
-
-        public Bullet playerBulletSprite;
+        
+        public Sprite playerBulletSprite;
         public Texture2D playerBulletTexture;
-
-        public EnemyBullet enemyBulletSprite;
-        public Texture2D enemyBulletTexture;
-
+        public int playerShotCooldown;
 
         public Enemy enemy1Sprite;
         public Texture2D enemy1Texture;
 
+        public EnemyBullet enemyBulletSprite;
+        public Texture2D enemyBulletTexture;
 
         public double level = 0.5;
         public int elapsedTime = 1;
@@ -68,8 +63,6 @@ namespace Darkness_Becomes_You
         protected override void Initialize()
         {
             base.Initialize();
-
-            activeEnemies.AddFirst(activeEnemy1);
         }
 
         protected override void LoadContent()
@@ -78,25 +71,20 @@ namespace Darkness_Becomes_You
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             activeSprites.AddLast(activeFriendlies);
+            activeSprites.AddLast(activeEnemies);
+            activeSprites.AddLast(activeBullets);
 
             activeFriendlies.AddLast(activePlayers);
 
-            activeSprites.AddLast(activeBullets);
+            activeEnemies.AddLast(activeEnemies1);
 
             activeBullets.AddLast(friendlyBullets);
             activeBullets.AddLast(enemyBullets);
-
-
-            activeSprites.AddLast(activeEnemies);
-
-            activeEnemies.AddLast(activeEnemy1);
-
 
             IsMouseVisible = true;
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
             graphics.ApplyChanges();
-
 
             Calibri = this.Content.Load<SpriteFont>("Fonts\\Calibri");
             playerTexture = this.Content.Load<Texture2D>("Textures\\Player");
@@ -104,13 +92,11 @@ namespace Darkness_Becomes_You
             enemy1Texture = this.Content.Load<Texture2D>("Textures\\Enemy1");
             enemyBulletTexture = this.Content.Load<Texture2D>("Textures\\EnemyBullet");
 
-
-            playerSprite = new Friendly();
+            playerSprite = new Player();
             playerSprite.SetTexture(playerTexture);
             playerSprite.UpperLeft = new Vector2((1920 / 2) - (playerSprite.GetWidth() / 2), (1080 / 2) - (playerSprite.GetHeight() / 2));
             playerSprite.LayerDepth = 0;
             playerSprite.firingDelay = 30;
-
             activePlayers.AddLast(playerSprite);
         }
 
@@ -150,33 +136,33 @@ namespace Darkness_Becomes_You
                 enemy1Sprite.uniqueMovements[0] = false;
 
                 enemy1Sprite.movementPatterns[1] = -30;
-                enemy1Sprite.movementSpeeds[1] = 2;
-                enemy1Sprite.movementTimings[1] = 235;
+                enemy1Sprite.movementSpeeds[1] = 3;
+                enemy1Sprite.movementTimings[1] = 300;
                 enemy1Sprite.movementRotation[1] = false;
                 enemy1Sprite.uniqueMovements[1] = false;
 
-                enemy1Sprite.movementPatterns[2] = -1;
-                enemy1Sprite.movementSpeeds[2] = 2;
-                enemy1Sprite.movementTimings[2] = 300;
+                enemy1Sprite.movementPatterns[2] = -2;
+                enemy1Sprite.movementSpeeds[2] = 3;
+                enemy1Sprite.movementTimings[2] = 365;
                 enemy1Sprite.movementRotation[2] = true;
                 enemy1Sprite.uniqueMovements[2] = false;
 
                 enemy1Sprite.movementPatterns[3] = 0;
-                enemy1Sprite.movementSpeeds[3] = 2;
-                enemy1Sprite.movementTimings[3] = 440;
+                enemy1Sprite.movementSpeeds[3] = 3;
+                enemy1Sprite.movementTimings[3] = 550;
                 enemy1Sprite.movementRotation[3] = true;
                 enemy1Sprite.uniqueMovements[3] = false;
 
-                enemy1Sprite.movementPatterns[4] = -1;
-                enemy1Sprite.movementSpeeds[4] = 2;
-                enemy1Sprite.movementTimings[4] = 495;
+                enemy1Sprite.movementPatterns[4] = -2;
+                enemy1Sprite.movementSpeeds[4] = 3;
+                enemy1Sprite.movementTimings[4] = 603;
                 enemy1Sprite.movementRotation[4] = true;
                 enemy1Sprite.uniqueMovements[4] = false;
 
-                enemy1Sprite.movementPatterns[5] = 90;
+                enemy1Sprite.movementPatterns[5] = 0;
                 enemy1Sprite.movementSpeeds[5] = 2;
-                enemy1Sprite.movementTimings[5] = 535;
-                enemy1Sprite.movementRotation[5] = false;
+                enemy1Sprite.movementTimings[5] = 653;
+                enemy1Sprite.movementRotation[5] = true;
                 enemy1Sprite.uniqueMovements[5] = false;
 
                 enemy1Sprite.movementPatterns[6] = 0;
@@ -191,7 +177,7 @@ namespace Darkness_Becomes_You
                 enemy1Sprite.movementRotation[7] = true;
                 enemy1Sprite.uniqueMovements[7] = false;
 
-                activeEnemy1.AddLast(enemy1Sprite);
+                activeEnemies1.AddLast(enemy1Sprite);
 
 
                 enemy1Sprite = new Enemy();
@@ -212,33 +198,33 @@ namespace Darkness_Becomes_You
                 enemy1Sprite.uniqueMovements[0] = false;
 
                 enemy1Sprite.movementPatterns[1] = -150;
-                enemy1Sprite.movementSpeeds[1] = 2;
-                enemy1Sprite.movementTimings[1] = 235;
+                enemy1Sprite.movementSpeeds[1] = 3;
+                enemy1Sprite.movementTimings[1] = 300;
                 enemy1Sprite.movementRotation[1] = false;
                 enemy1Sprite.uniqueMovements[1] = false;
 
-                enemy1Sprite.movementPatterns[2] = 1;
-                enemy1Sprite.movementSpeeds[2] = 2;
-                enemy1Sprite.movementTimings[2] = 300;
+                enemy1Sprite.movementPatterns[2] = 2;
+                enemy1Sprite.movementSpeeds[2] = 3;
+                enemy1Sprite.movementTimings[2] = 365;
                 enemy1Sprite.movementRotation[2] = true;
                 enemy1Sprite.uniqueMovements[2] = false;
 
                 enemy1Sprite.movementPatterns[3] = 0;
-                enemy1Sprite.movementSpeeds[3] = 2;
-                enemy1Sprite.movementTimings[3] = 440;
+                enemy1Sprite.movementSpeeds[3] = 3;
+                enemy1Sprite.movementTimings[3] = 550;
                 enemy1Sprite.movementRotation[3] = true;
                 enemy1Sprite.uniqueMovements[3] = false;
 
-                enemy1Sprite.movementPatterns[4] = 1;
-                enemy1Sprite.movementSpeeds[4] = 2;
-                enemy1Sprite.movementTimings[4] = 495;
+                enemy1Sprite.movementPatterns[4] = 2;
+                enemy1Sprite.movementSpeeds[4] = 3;
+                enemy1Sprite.movementTimings[4] = 603;
                 enemy1Sprite.movementRotation[4] = true;
                 enemy1Sprite.uniqueMovements[4] = false;
 
-                enemy1Sprite.movementPatterns[5] = 90;
+                enemy1Sprite.movementPatterns[5] = 0;
                 enemy1Sprite.movementSpeeds[5] = 2;
-                enemy1Sprite.movementTimings[5] = 535;
-                enemy1Sprite.movementRotation[5] = false;
+                enemy1Sprite.movementTimings[5] = 653;
+                enemy1Sprite.movementRotation[5] = true;
                 enemy1Sprite.uniqueMovements[5] = false;
 
                 enemy1Sprite.movementPatterns[6] = 0;
@@ -253,7 +239,7 @@ namespace Darkness_Becomes_You
                 enemy1Sprite.movementRotation[7] = true;
                 enemy1Sprite.uniqueMovements[7] = false;
 
-                activeEnemy1.AddLast(enemy1Sprite);
+                activeEnemies1.AddLast(enemy1Sprite);
 
 
                 level = 1;
@@ -262,6 +248,7 @@ namespace Darkness_Becomes_You
             {
 
             }
+
             foreach (LinkedList<Sprite> list in activeEnemies)
             {
                 foreach (Enemy enemy in list)
@@ -282,14 +269,16 @@ namespace Darkness_Becomes_You
                                 }
 
                                 if (enemy.uniqueMovements[i])
-                                    UniqueEnemyMovements(enemy, i);
+                                    UniqueMonsterMovements(enemy, i);
                             }
                         }
                         if (enemy.firingTimer == 0)
                         {
                             enemyBulletSprite = new EnemyBullet();
                             enemyBulletSprite.SetTexture(enemyBulletTexture);
-                            enemyBulletSprite.SetAll(enemy);
+                            enemyBulletSprite.Origin = enemyBulletSprite.GetCenter();
+                            enemyBulletSprite.UpperLeft = new Vector2((enemy.UpperLeft.X + enemy.GetCenter().X) - (enemyBulletSprite.GetWidth() / 2), (enemy.UpperLeft.Y + enemy.GetCenter().Y) - (enemyBulletSprite.GetHeight() / 2));
+                            enemyBulletSprite.SetSpeedAndDirection(enemy.firingSpeed, enemy.firingDirection);
 
                             enemyBullets.AddLast(enemyBulletSprite);
 
@@ -303,7 +292,9 @@ namespace Darkness_Becomes_You
                     }
                 }
             }
-
+            // Allows the game to exit
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+                this.Exit();
 
             currentKeyState = Keyboard.GetState();
 
@@ -315,27 +306,32 @@ namespace Darkness_Becomes_You
             {
                 this.Exit();
             }
+
             if (currentKeyState.IsKeyDown(Keys.W))
             {
                 playerSprite.UpperLeft = playerSprite.UpperLeft + new Vector2(0, -5);
             }
+
             if (currentKeyState.IsKeyDown(Keys.S))
             {
                 playerSprite.UpperLeft = playerSprite.UpperLeft + new Vector2(0, 5);
             }
+
             if (currentKeyState.IsKeyDown(Keys.A))
             {
                 playerSprite.UpperLeft = playerSprite.UpperLeft + new Vector2(-5, 0);
             }
+
             if (currentKeyState.IsKeyDown(Keys.D))
             {
                 playerSprite.UpperLeft = playerSprite.UpperLeft + new Vector2(5, 0);
             }
+
             if (currentKeyState.IsKeyDown(Keys.Space))
             {
                 if (playerSprite.firingTimer <= 0)
                 {
-                    playerBulletSprite = new Bullet();
+                    playerBulletSprite = new Sprite();
                     playerBulletSprite.SetTexture(playerBulletTexture);
                     playerBulletSprite.UpperLeft = new Vector2(playerSprite.UpperLeft.X + (playerSprite.GetWidth() / 2) - (playerBulletSprite.GetWidth() / 2), playerSprite.UpperLeft.Y);
                     playerBulletSprite.SetSpeedAndDirection(10, 90);
@@ -345,7 +341,6 @@ namespace Darkness_Becomes_You
                     playerSprite.firingTimer = playerSprite.firingDelay - 1;
                 }
             }
-
 
             foreach (LinkedList<LinkedList<Sprite>> listOfLists in activeSprites)
             {
@@ -384,12 +379,9 @@ namespace Darkness_Becomes_You
                     }
                 }
             }
-
-
             playerSprite.firingTimer -= 1;
             elapsedTime += 1;
             oldKeyState = currentKeyState;
-
 
             base.Update(gameTime);
         }
@@ -404,7 +396,7 @@ namespace Darkness_Becomes_You
             {
                 foreach (LinkedList<Sprite> list in listOfLists)
                 {
-                    foreach (Sprite sprite in list)
+                    foreach(Sprite sprite in list)
                     {
                         sprite.Draw(spriteBatch);
                     }
@@ -413,22 +405,20 @@ namespace Darkness_Becomes_You
 
             spriteBatch.DrawString(Calibri, elapsedTime.ToString(), new Vector2(10, 10), Color.Black);
 
-            foreach (Sprite enemy in activeEnemy1)
-            {
-                spriteBatch.DrawString(Calibri, "X: " + enemy.UpperLeft.X + ", Y: " + enemy.UpperLeft.Y, new Vector2(enemy.UpperLeft.X - 100, enemy.UpperLeft.Y - 200), Color.Black);
-            }
-
             spriteBatch.End();
 
             base.Draw(gameTime);
         }
+        
 
-
-        public void UniqueEnemyMovements(Enemy enemy, int i)
+        public void UniqueMonsterMovements(Enemy enemy, int i)
         {
+            if (enemy.firingDelay == 60)
+                return;
+
             int q = (int)enemy.UpperLeft.X;
             int r = (int)enemy.UpperLeft.Y;
-            if (((q == 63) && (r == 484)) || (q == 1806) && (r == 484))
+            if (((q == 1798) && (r == 494)) || (q == 71) && (r == 494))
             {
                 if (i == 6)
                 {
@@ -458,8 +448,9 @@ namespace Darkness_Becomes_You
 
                         if (enemy.firingDirection == -30)
                         {
-                                enemy.firingDelay = -1;
-                                enemy.firingTimer = enemy.firingDelay;
+                            enemy.firingDelay = 60;
+                            enemy.firingDirection = 270;
+                            enemy.firingTimer = enemy.firingDelay;
                         }
                     }
                 }
