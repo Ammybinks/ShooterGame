@@ -719,7 +719,7 @@ namespace SpriteLibrary
         public bool[] uniqueMovements;
         public bool[] movementRotation;
     }
-    public class Bullet : Sprite
+    public class Bullet : Unit
     {
 
         public void SetAll(Unit owner)
@@ -747,11 +747,11 @@ namespace SpriteLibrary
     }
     public class FriendlyBullet : Bullet
     {
-        public bool friendly = true;
+        new public bool friendly = true;
     }
     public class EnemyBullet : Bullet
     {
-        public bool friendly = false;
+        new public bool friendly = false;
     }
 
     public class display : Sprite
