@@ -29,19 +29,6 @@ namespace SpriteLibrary
 {
     public class Sprite
     {
-        public int firingDelay;
-        public int firingTimer;
-        public int firingSpeed;
-        public int firingDirection;
-
-        public int patternNum;
-
-        public double[] movementPatterns;
-        public double[] movementSpeeds;
-        public double[] movementTimings;
-        public bool[] uniqueMovements;
-        public bool[] movementRotation;
-
         // upper-left coordinate of the sprite image on the screen
         public Vector2 UpperLeft;
 
@@ -693,6 +680,82 @@ namespace SpriteLibrary
             // update last animation time
             lastAnimationTime = (int)gameTime.TotalGameTime.TotalMilliseconds;
         }
+        public void Cull()
+        {
+            this.IsAlive = false;
+        }
+
+    }
+    public class Unit : Sprite
+    {
+        public bool friendly;
+
+        public int health = 1;
+        public int damage = 1;
+
+        public int firingDelay;
+        public int firingTimer;
+        public int firingSpeed;
+        public int firingDirection;
+    }
+    public class Friendly : Unit
+    {
+        new public bool friendly = true;
+
+    }
+    public class Player : Friendly
+    {
+
+    }
+    public class Enemy : Unit
+    {
+        new public bool friendly = false;
+
+        public int patternNum;
+
+        public double[] movementPatterns;
+        public double[] movementSpeeds;
+        public double[] movementTimings;
+        public bool[] uniqueMovements;
+        public bool[] movementRotation;
+    }
+    public class Bullet : Sprite
+    {
+
+        public void SetAll(Unit owner)
+        {
+            Vector2 spawnLocation = this.GetSpawnLocation(owner);
+            Vector2 origin = this.GetCenter();
+            int speed = owner.firingSpeed;
+            int directionAngle = owner.firingDirection;
+            double rotationAngle = this.GetDirectionAngle() + 90;
+
+            this.UpperLeft = spawnLocation;
+            this.Origin = origin;
+            this.SetSpeedAndDirection(speed, directionAngle);
+            this.RotationAngle = rotationAngle;
+        }
+
+        public Vector2 GetSpawnLocation(Sprite owner)
+        {
+            Vector2 ownerCenter = owner.GetCenter();
+            float X = (owner.UpperLeft.X + ownerCenter.X) - (this.GetWidth() / 2);
+            float Y = (owner.UpperLeft.Y + ownerCenter.Y) - (this.GetHeight() / 2);
+
+            return new Vector2(X, Y);
+        }
+    }
+    public class FriendlyBullet : Bullet
+    {
+        public bool friendly = true;
+    }
+    public class EnemyBullet : Bullet
+    {
+        public bool friendly = false;
+    }
+
+    public class display : Sprite
+    {
 
     }
 }
