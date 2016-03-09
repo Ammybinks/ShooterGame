@@ -700,16 +700,18 @@ namespace SpriteLibrary
     }
     public class Friendly : Unit
     {
-        new public bool friendly = true;
 
     }
     public class Player : Friendly
     {
 
+        public int upgradeStage = 3;
+        public int upgradeTimer = 0;
+        public int upgradeCounter = 0;
+
     }
     public class Enemy : Unit
     {
-        new public bool friendly = false;
 
         public int patternNum;
 
@@ -747,14 +749,12 @@ namespace SpriteLibrary
     }
     public class FriendlyBullet : Bullet
     {
-        new public bool friendly = true;
     }
     public class EnemyBullet : Bullet
     {
-        new public bool friendly = false;
     }
 
-    public class display : Sprite
+    public class Display : Sprite
     {
 
     }

@@ -1,5 +1,5 @@
 Content\Textures\Player.xnb
-Content\Textures\PlayerBullet.xnb
 Content\Textures\Enemy1.xnb
+Content\Textures\PlayerBullet.xnb
 Content\Textures\EnemyBullet.xnb
 Content\Fonts\Calibri.xnb

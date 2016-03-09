@@ -40,8 +40,8 @@ namespace Darkness_Becomes_You
 
         public Player playerSprite;
         public Texture2D playerTexture;
-        
-        public Sprite playerBulletSprite;
+
+        public FriendlyBullet playerBulletSprite;
         public Texture2D playerBulletTexture;
         public int playerShotCooldown;
 
@@ -70,9 +70,9 @@ namespace Darkness_Becomes_You
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            activeSprites.AddLast(activeBullets);
             activeSprites.AddLast(activeFriendlies);
             activeSprites.AddLast(activeEnemies);
-            activeSprites.AddLast(activeBullets);
 
             activeFriendlies.AddLast(activePlayers);
 
@@ -97,6 +97,8 @@ namespace Darkness_Becomes_You
             playerSprite.UpperLeft = new Vector2((1920 / 2) - (playerSprite.GetWidth() / 2), (1080 / 2) - (playerSprite.GetHeight() / 2));
             playerSprite.LayerDepth = 0;
             playerSprite.firingDelay = 30;
+            playerSprite.friendly = true;
+
             activePlayers.AddLast(playerSprite);
         }
 
@@ -126,6 +128,7 @@ namespace Darkness_Becomes_You
                 enemy1Sprite.firingSpeed = 5;
                 enemy1Sprite.firingDirection = 270;
                 enemy1Sprite.patternNum = 8;
+                enemy1Sprite.friendly = false;
                 enemy1Sprite.movementPatterns = new double[enemy1Sprite.patternNum];
                 enemy1Sprite.movementSpeeds = new double[enemy1Sprite.patternNum];
                 enemy1Sprite.movementTimings = new double[enemy1Sprite.patternNum];
@@ -188,6 +191,7 @@ namespace Darkness_Becomes_You
                 enemy1Sprite.firingSpeed = 5;
                 enemy1Sprite.firingDirection = 270;
                 enemy1Sprite.patternNum = 8;
+                enemy1Sprite.friendly = false;
                 enemy1Sprite.movementPatterns = new double[enemy1Sprite.patternNum];
                 enemy1Sprite.movementSpeeds = new double[enemy1Sprite.patternNum];
                 enemy1Sprite.movementTimings = new double[enemy1Sprite.patternNum];
@@ -279,6 +283,7 @@ namespace Darkness_Becomes_You
                             enemyBulletSprite.Origin = enemyBulletSprite.GetCenter();
                             enemyBulletSprite.UpperLeft = new Vector2((enemy.UpperLeft.X + enemy.GetCenter().X) - (enemyBulletSprite.GetWidth() / 2), (enemy.UpperLeft.Y + enemy.GetCenter().Y) - (enemyBulletSprite.GetHeight() / 2));
                             enemyBulletSprite.SetSpeedAndDirection(enemy.firingSpeed, enemy.firingDirection);
+                            enemyBulletSprite.friendly = false;
 
                             enemyBullets.AddLast(enemyBulletSprite);
 
@@ -327,20 +332,8 @@ namespace Darkness_Becomes_You
                 playerSprite.UpperLeft = playerSprite.UpperLeft + new Vector2(5, 0);
             }
 
-            if (currentKeyState.IsKeyDown(Keys.Space))
-            {
-                if (playerSprite.firingTimer <= 0)
-                {
-                    playerBulletSprite = new Sprite();
-                    playerBulletSprite.SetTexture(playerBulletTexture);
-                    playerBulletSprite.UpperLeft = new Vector2(playerSprite.UpperLeft.X + (playerSprite.GetWidth() / 2) - (playerBulletSprite.GetWidth() / 2), playerSprite.UpperLeft.Y);
-                    playerBulletSprite.SetSpeedAndDirection(10, 90);
 
-                    friendlyBullets.AddLast(playerBulletSprite);
-
-                    playerSprite.firingTimer = playerSprite.firingDelay - 1;
-                }
-            }
+            PlayerFire(playerSprite);
 
             foreach (LinkedList<LinkedList<Sprite>> listOfLists in activeSprites)
             {
@@ -363,14 +356,17 @@ namespace Darkness_Becomes_You
                                             sprite.health -= target.damage;
                                             target.health -= sprite.health;
 
-                                            if (sprite.health <= 0)
+                                            if (sprite.health == 0)
                                             {
-                                                sprite.Cull();
+                                                sprite.IsAlive = false;
                                             }
-                                            if (target.health <= 0)
+                                            if (target.health == 0)
                                             {
-                                                target.Cull();
+                                                target.IsAlive = false;
                                             }
+
+                                            //sprite.IsAlive = false;
+                                            //target.IsAlive = false;
                                         }
                                     }
                                 }
@@ -379,7 +375,7 @@ namespace Darkness_Becomes_You
                     }
                 }
             }
-            playerSprite.firingTimer -= 1;
+
             elapsedTime += 1;
             oldKeyState = currentKeyState;
 
@@ -396,7 +392,7 @@ namespace Darkness_Becomes_You
             {
                 foreach (LinkedList<Sprite> list in listOfLists)
                 {
-                    foreach(Sprite sprite in list)
+                    foreach (Sprite sprite in list)
                     {
                         sprite.Draw(spriteBatch);
                     }
@@ -409,7 +405,7 @@ namespace Darkness_Becomes_You
 
             base.Draw(gameTime);
         }
-        
+
 
         public void UniqueMonsterMovements(Enemy enemy, int i)
         {
@@ -437,6 +433,7 @@ namespace Darkness_Becomes_You
                         enemyBulletSprite.UpperLeft = new Vector2((enemy.UpperLeft.X + enemy.GetCenter().X) - (enemyBulletSprite.GetWidth() / 2), (enemy.UpperLeft.Y + enemy.GetCenter().Y) - (enemyBulletSprite.GetHeight() / 2));
                         enemyBulletSprite.SetSpeedAndDirection(enemy.firingSpeed, Sprite.CalculateDirectionAngle(new Vector2((playerSprite.UpperLeft.X + playerSprite.GetWidth()) - (enemyBulletSprite.UpperLeft.X + enemyBulletSprite.GetWidth()), (playerSprite.UpperLeft.Y + playerSprite.GetWidth() / 2) - (enemyBulletSprite.UpperLeft.Y + enemyBulletSprite.GetWidth() / 2))) + enemy.firingDirection);
                         enemyBulletSprite.RotationAngle = enemyBulletSprite.GetDirectionAngle() + 90;
+                        enemyBulletSprite.friendly = false;
 
                         enemyBullets.AddLast(enemyBulletSprite);
 
@@ -456,5 +453,201 @@ namespace Darkness_Becomes_You
                 }
             }
         }
+
+        public void PlayerFire(Player player)
+        {
+
+            if (player.upgradeStage == -1)
+            {
+                return;
+            }
+            if (player.upgradeStage == 0)
+            {
+                if (currentKeyState.IsKeyDown(Keys.Space))
+                {
+                    if (player.firingTimer <= 0)
+                    {
+
+                        playerBulletSprite = new FriendlyBullet();
+                        playerBulletSprite.SetTexture(playerBulletTexture);
+                        playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (playerSprite.GetWidth() / 2) - (playerBulletSprite.GetWidth() / 2), playerSprite.UpperLeft.Y);
+                        playerBulletSprite.SetSpeedAndDirection(10, 90);
+                        playerBulletSprite.friendly = true;
+
+                        friendlyBullets.AddLast(playerBulletSprite);
+
+                        playerSprite.firingTimer = playerSprite.firingDelay - 1;
+                    }
+                }
+            }
+            if (player.upgradeStage == 1)
+            {
+                if (currentKeyState.IsKeyDown(Keys.Space))
+                {
+                    if (player.firingTimer <= 0)
+                    {
+                        playerBulletSprite = new FriendlyBullet();
+                        playerBulletSprite.SetTexture(playerBulletTexture);
+                        playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (playerSprite.GetWidth() / 2) - (playerBulletSprite.GetWidth()), playerSprite.UpperLeft.Y);
+                        playerBulletSprite.SetSpeedAndDirection(10, 90);
+                        playerBulletSprite.friendly = true;
+
+                        friendlyBullets.AddLast(playerBulletSprite);
+
+
+                        playerBulletSprite = new FriendlyBullet();
+                        playerBulletSprite.SetTexture(playerBulletTexture);
+                        playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (playerSprite.GetWidth() / 2), playerSprite.UpperLeft.Y);
+                        playerBulletSprite.SetSpeedAndDirection(10, 90);
+                        playerBulletSprite.friendly = true;
+
+                        friendlyBullets.AddLast(playerBulletSprite);
+
+                        playerSprite.firingTimer = playerSprite.firingDelay - 1;
+                    }
+                }
+            }
+            if (player.upgradeStage == 2)
+            {
+                if (player.upgradeCounter == 0)
+                {
+                    if (currentKeyState.IsKeyDown(Keys.Space))
+                    {
+                        if (player.firingTimer <= 0)
+                        {
+                            playerBulletSprite = new FriendlyBullet();
+                            playerBulletSprite.SetTexture(playerBulletTexture);
+                            playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (player.GetWidth() / 2) - (playerBulletSprite.GetWidth()), playerSprite.UpperLeft.Y);
+                            playerBulletSprite.SetSpeedAndDirection(10, 90);
+                            playerBulletSprite.friendly = true;
+
+                            friendlyBullets.AddLast(playerBulletSprite);
+
+
+                            playerBulletSprite = new FriendlyBullet();
+                            playerBulletSprite.SetTexture(playerBulletTexture);
+                            playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (player.GetWidth() / 2), playerSprite.UpperLeft.Y);
+                            playerBulletSprite.SetSpeedAndDirection(10, 90);
+                            playerBulletSprite.friendly = true;
+
+                            friendlyBullets.AddLast(playerBulletSprite);
+
+                            player.firingTimer = 2;
+                            player.upgradeCounter = 1;
+                        }
+                    }
+                }
+                else if (player.upgradeCounter == 1)
+                {
+                    if (player.firingTimer <= 0)
+                    {
+                        playerBulletSprite = new FriendlyBullet();
+                        playerBulletSprite.SetTexture(playerBulletTexture);
+                        playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (player.GetWidth() / 2) - (playerBulletSprite.GetWidth() / 2), playerSprite.UpperLeft.Y);
+                        playerBulletSprite.SetSpeedAndDirection(10, 90);
+                        playerBulletSprite.friendly = true;
+
+                        friendlyBullets.AddLast(playerBulletSprite);
+
+                        player.firingTimer = playerSprite.firingDelay - 1;
+                        player.upgradeCounter = 0;
+                    }
+                }
+                else
+                {
+                    player.upgradeCounter = 0;
+                }
+            }
+            if (player.upgradeStage == 3)
+            {
+                if (player.upgradeCounter == 0)
+                {
+                    if (currentKeyState.IsKeyDown(Keys.Space))
+                    {
+                        if (player.firingTimer <= 0)
+                        {
+                            playerBulletSprite = new FriendlyBullet();
+                            playerBulletSprite.SetTexture(playerBulletTexture);
+                            playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (player.GetWidth() / 2) - (playerBulletSprite.GetWidth()), playerSprite.UpperLeft.Y);
+                            playerBulletSprite.SetSpeedAndDirection(10, 90);
+                            playerBulletSprite.friendly = true;
+
+                            friendlyBullets.AddLast(playerBulletSprite);
+
+
+                            playerBulletSprite = new FriendlyBullet();
+                            playerBulletSprite.SetTexture(playerBulletTexture);
+                            playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (player.GetWidth() / 2), playerSprite.UpperLeft.Y);
+                            playerBulletSprite.SetSpeedAndDirection(10, 90);
+                            playerBulletSprite.friendly = true;
+
+                            friendlyBullets.AddLast(playerBulletSprite);
+
+                            playerBulletSprite = new FriendlyBullet();
+                            playerBulletSprite.SetTexture(playerBulletTexture);
+                            playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (player.GetWidth() / 2) + (playerBulletSprite.GetWidth() / 2), playerSprite.UpperLeft.Y);
+                            playerBulletSprite.SetSpeedAndDirection(10, -90);
+                            playerBulletSprite.ChangeRotationAngle(-180);
+                            playerBulletSprite.friendly = true;
+
+                            friendlyBullets.AddLast(playerBulletSprite);
+
+                            player.firingTimer = 2;
+                            player.upgradeCounter = 1;
+                        }
+                    }
+                }
+                else if (player.upgradeCounter == 1)
+                {
+                    if (currentKeyState.IsKeyDown(Keys.Space))
+                    {
+                        if (player.firingTimer <= 0)
+                        {
+                            playerBulletSprite = new FriendlyBullet();
+                            playerBulletSprite.SetTexture(playerBulletTexture);
+                            playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (player.GetWidth() / 2) - (playerBulletSprite.GetWidth()), playerSprite.UpperLeft.Y);
+                            playerBulletSprite.SetSpeedAndDirection(10, 90);
+                            playerBulletSprite.friendly = true;
+
+                            friendlyBullets.AddLast(playerBulletSprite);
+
+
+                            playerBulletSprite = new FriendlyBullet();
+                            playerBulletSprite.SetTexture(playerBulletTexture);
+                            playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (player.GetWidth() / 2), playerSprite.UpperLeft.Y);
+                            playerBulletSprite.SetSpeedAndDirection(10, 90);
+                            playerBulletSprite.friendly = true;
+
+                            friendlyBullets.AddLast(playerBulletSprite);
+
+                            player.firingTimer = 2;
+                            player.upgradeCounter = 2;
+                        }
+                    }
+                }
+                else if (player.upgradeCounter == 2)
+                {
+                    if (player.firingTimer <= 0)
+                    {
+                        playerBulletSprite = new FriendlyBullet();
+                        playerBulletSprite.SetTexture(playerBulletTexture);
+                        playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (player.GetWidth() / 2) - (playerBulletSprite.GetWidth() / 2), playerSprite.UpperLeft.Y);
+                        playerBulletSprite.SetSpeedAndDirection(10, 90);
+                        playerBulletSprite.friendly = true;
+
+                        friendlyBullets.AddLast(playerBulletSprite);
+
+                        player.firingTimer = playerSprite.firingDelay - 1;
+                        player.upgradeCounter = 0;
+                    }
+                }
+                else
+                {
+                    player.upgradeCounter = 0;
+                }
+            }
+            playerSprite.firingTimer -= 1;
+        }
+
     }
 }
