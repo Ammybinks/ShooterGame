@@ -688,8 +688,6 @@ namespace SpriteLibrary
     }
     public class Unit : Sprite
     {
-        public bool friendly;
-
         public int health = 1;
         public int damage = 1;
 
@@ -712,8 +710,8 @@ namespace SpriteLibrary
     }
     public class Enemy : Unit
     {
-
         public int patternNum;
+        public int coinsDropped;
 
         public double[] movementPatterns;
         public double[] movementSpeeds;
@@ -749,9 +747,15 @@ namespace SpriteLibrary
     }
     public class FriendlyBullet : Bullet
     {
+
     }
     public class EnemyBullet : Bullet
     {
+
+    }
+    public class Coin : Unit
+    {
+        public bool accelerating = true;
     }
 
     public class Display : Sprite

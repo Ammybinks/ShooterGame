@@ -18,12 +18,6 @@ namespace Darkness_Becomes_You
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        LinkedList<LinkedList<LinkedList<Sprite>>> activeSprites = new LinkedList<LinkedList<LinkedList<Sprite>>>();
-
-        LinkedList<LinkedList<Sprite>> activeFriendlies = new LinkedList<LinkedList<Sprite>>();
-        LinkedList<Sprite> activePlayers = new LinkedList<Sprite>();
-
-
         LinkedList<LinkedList<Sprite>> activeEnemies = new LinkedList<LinkedList<Sprite>>();
         LinkedList<Sprite> activeEnemies1 = new LinkedList<Sprite>();
 
@@ -31,7 +25,11 @@ namespace Darkness_Becomes_You
         LinkedList<Sprite> friendlyBullets = new LinkedList<Sprite>();
         LinkedList<Sprite> enemyBullets = new LinkedList<Sprite>();
 
+        LinkedList<Sprite> activeCoins = new LinkedList<Sprite>();
+
         public SpriteFont Calibri;
+
+        public Random coinRNG = new Random();
 
         public KeyboardState currentKeyState;
         public KeyboardState oldKeyState;
@@ -51,8 +49,13 @@ namespace Darkness_Becomes_You
         public EnemyBullet enemyBulletSprite;
         public Texture2D enemyBulletTexture;
 
+        public Coin coin;
+        public Texture2D coinTexture;
+
         public double level = 0.5;
         public int elapsedTime = 1;
+
+        public int money = 0;
 
         public Game1()
         {
@@ -70,12 +73,6 @@ namespace Darkness_Becomes_You
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            activeSprites.AddLast(activeBullets);
-            activeSprites.AddLast(activeFriendlies);
-            activeSprites.AddLast(activeEnemies);
-
-            activeFriendlies.AddLast(activePlayers);
-
             activeEnemies.AddLast(activeEnemies1);
 
             activeBullets.AddLast(friendlyBullets);
@@ -91,15 +88,14 @@ namespace Darkness_Becomes_You
             playerBulletTexture = this.Content.Load<Texture2D>("Textures\\PlayerBullet");
             enemy1Texture = this.Content.Load<Texture2D>("Textures\\Enemy1");
             enemyBulletTexture = this.Content.Load<Texture2D>("Textures\\EnemyBullet");
+            coinTexture = this.Content.Load<Texture2D>("Textures\\TheMunz");
 
             playerSprite = new Player();
             playerSprite.SetTexture(playerTexture);
             playerSprite.UpperLeft = new Vector2((1920 / 2) - (playerSprite.GetWidth() / 2), (1080 / 2) - (playerSprite.GetHeight() / 2));
             playerSprite.LayerDepth = 0;
             playerSprite.firingDelay = 30;
-            playerSprite.friendly = true;
 
-            activePlayers.AddLast(playerSprite);
         }
 
         /// <summary>
@@ -128,7 +124,7 @@ namespace Darkness_Becomes_You
                 enemy1Sprite.firingSpeed = 5;
                 enemy1Sprite.firingDirection = 270;
                 enemy1Sprite.patternNum = 8;
-                enemy1Sprite.friendly = false;
+                enemy1Sprite.coinsDropped = 5;
                 enemy1Sprite.movementPatterns = new double[enemy1Sprite.patternNum];
                 enemy1Sprite.movementSpeeds = new double[enemy1Sprite.patternNum];
                 enemy1Sprite.movementTimings = new double[enemy1Sprite.patternNum];
@@ -191,7 +187,7 @@ namespace Darkness_Becomes_You
                 enemy1Sprite.firingSpeed = 5;
                 enemy1Sprite.firingDirection = 270;
                 enemy1Sprite.patternNum = 8;
-                enemy1Sprite.friendly = false;
+                enemy1Sprite.coinsDropped = 5;
                 enemy1Sprite.movementPatterns = new double[enemy1Sprite.patternNum];
                 enemy1Sprite.movementSpeeds = new double[enemy1Sprite.patternNum];
                 enemy1Sprite.movementTimings = new double[enemy1Sprite.patternNum];
@@ -280,10 +276,7 @@ namespace Darkness_Becomes_You
                         {
                             enemyBulletSprite = new EnemyBullet();
                             enemyBulletSprite.SetTexture(enemyBulletTexture);
-                            enemyBulletSprite.Origin = enemyBulletSprite.GetCenter();
-                            enemyBulletSprite.UpperLeft = new Vector2((enemy.UpperLeft.X + enemy.GetCenter().X) - (enemyBulletSprite.GetWidth() / 2), (enemy.UpperLeft.Y + enemy.GetCenter().Y) - (enemyBulletSprite.GetHeight() / 2));
-                            enemyBulletSprite.SetSpeedAndDirection(enemy.firingSpeed, enemy.firingDirection);
-                            enemyBulletSprite.friendly = false;
+                            enemyBulletSprite.SetAll(enemy);
 
                             enemyBullets.AddLast(enemyBulletSprite);
 
@@ -335,45 +328,185 @@ namespace Darkness_Becomes_You
 
             PlayerFire(playerSprite);
 
-            foreach (LinkedList<LinkedList<Sprite>> listOfLists in activeSprites)
+            //foreach (LinkedList<LinkedList<Sprite>> listOfLists in activeSprites)
+            //{
+            //    foreach (LinkedList<Sprite> list in listOfLists)
+            //    {
+            //        foreach (Unit sprite in list)
+            //        {
+            //            sprite.MoveAndVanish(1920, 1080);
+
+            //foreach (LinkedList<LinkedList<Sprite>> targetListOfLists in activeSprites)
+            //{
+            //    foreach (LinkedList<Sprite> targetList in targetListOfLists)
+            //    {
+            //        foreach (Unit target in targetList)
+            //        {
+            //            if (sprite.friendly != target.friendly)
+            //            {
+            //                if (sprite.collidable || target.collidable)
+            //                {
+            //                    if (sprite.IsCollided(target))
+            //                    {
+            //                        sprite.health -= target.damage;
+            //                        target.health -= sprite.damage;
+
+            //                        if (sprite.health == 0)
+            //                        {
+            //                            sprite.IsAlive = false;
+            //                        }
+            //                        if (target.health == 0)
+            //                        {
+            //                            target.IsAlive = false;
+            //                        }
+
+            //                        //sprite.IsAlive = false;
+            //                        //target.IsAlive = false;
+            //                    }
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+            //        }
+            //    }
+            //}
+            playerSprite.Move();
+
+            foreach (LinkedList<Sprite> list in activeEnemies)
             {
-                foreach (LinkedList<Sprite> list in listOfLists)
+                foreach (Enemy enemy in list)
                 {
-                    foreach (Unit sprite in list)
+                    enemy.MoveAndVanish(1920, 1080);
+
+                    if (playerSprite.IsCollided(enemy))
                     {
-                        sprite.MoveAndVanish(1920, 1080);
+                        playerSprite.health -= enemy.damage;
+                        enemy.health -= playerSprite.damage;
 
-                        foreach (LinkedList<LinkedList<Sprite>> targetListOfLists in activeSprites)
+                        if (playerSprite.health <= 0)
                         {
-                            foreach (LinkedList<Sprite> targetList in targetListOfLists)
+                            playerSprite.IsAlive = false;
+                        }
+                        if (enemy.health <= 0)
+                        {
+                            enemy.IsAlive = false;
+                        }
+                    }
+                    foreach (Unit bullet in friendlyBullets)
+                    {
+                        if (enemy.IsCollided(bullet))
+                        {
+                            enemy.health -= bullet.damage;
+                            bullet.IsAlive = false;
+
+                            if (enemy.health <= 0)
                             {
-                                foreach (Unit target in targetList)
+                                int coinDirection;
+                                int coinVelocity;
+
+                                for (int i = 0; i < enemy.coinsDropped;i++ )
                                 {
-                                    if (sprite.friendly != target.friendly)
-                                    {
-                                        if (sprite.IsCollided(target))
-                                        {
-                                            sprite.health -= target.damage;
-                                            target.health -= sprite.health;
+                                    coinDirection = coinRNG.Next(0, 360);
+                                    coinVelocity = coinRNG.Next(1, 10);
 
-                                            if (sprite.health == 0)
-                                            {
-                                                sprite.IsAlive = false;
-                                            }
-                                            if (target.health == 0)
-                                            {
-                                                target.IsAlive = false;
-                                            }
+                                    coin = new Coin();
+                                    coin.SetTexture(coinTexture);
+                                    coin.UpperLeft = new Vector2((enemy.UpperLeft.X - (enemy.GetWidth() / 2)) - (coin.GetWidth() / 2), (enemy.UpperLeft.Y - (enemy.GetHeight() / 2)) - (coin.GetHeight() / 2));
+                                    coin.SetSpeedAndDirection(coinVelocity, coinDirection);
 
-                                            //sprite.IsAlive = false;
-                                            //target.IsAlive = false;
-                                        }
-                                    }
+                                    activeCoins.AddLast(coin);
                                 }
+                                enemy.IsAlive = false;
                             }
                         }
                     }
                 }
+            }
+            foreach (Bullet bullet in enemyBullets)
+            {
+                if (playerSprite.IsCollided(bullet))
+                {
+                    playerSprite.health -= bullet.damage;
+                    bullet.IsAlive = false;
+
+                    if (playerSprite.health <= 0)
+                    {
+                        playerSprite.IsAlive = false;
+                    }
+                }
+            }
+            foreach (LinkedList<Sprite> list in activeBullets)
+            {
+                foreach (Bullet bullet in list)
+                {
+                    bullet.MoveAndVanish(1920, 1080);
+                }
+            }
+            foreach (Coin coin in activeCoins)
+            {
+                if (coin.accelerating)
+                {
+                    if (((coin.GetVelocity().Y > 1)) && ((coin.GetVelocity().X < 0.5f) && (coin.GetVelocity().X > -0.5f)))
+                    {
+                        coin.MaxSpeed = 2;
+                        coin.SetVelocity(0, 2);
+                        coin.accelerating = false;
+                    }
+                    else if ((coin.GetVelocity().Y < 2) && (coin.GetVelocity().Y > 1))
+                    {
+                        if (coin.GetVelocity().X > 0.1f)
+                        {
+                            coin.Accelerate(-0.5f, 0);
+                        }
+                        if (coin.GetVelocity().X < -0.1f)
+                        {
+                            coin.Accelerate(0.5f, 0);
+                        }
+                    }
+                    else if ((coin.GetVelocity().X < 0.5f) && (coin.GetVelocity().X > -0.5f))
+                    {
+                        coin.SetVelocity(0, coin.GetVelocity().Y);
+
+                        if (coin.GetVelocity().X > 2)
+                        {
+                            coin.Accelerate(0, -0.5);
+                        }
+                        if (coin.GetVelocity().X < 1)
+                        {
+                            coin.Accelerate(0, 0.5);
+                        }
+                        coin.Accelerate(0, 0.1f);
+                    }
+                    else
+                    {
+
+                        if (coin.GetVelocity().X > 0.5f)
+                        {
+                            coin.Accelerate(-0.5f, 0);
+                        }
+                        else if (coin.GetVelocity().X < -0.5f)
+                        {
+                            coin.Accelerate(0.5f, 0);
+                        }
+
+                        if (coin.GetVelocity().X > 2)
+                        {
+                            coin.Accelerate(0, -0.5);
+                        }
+                        else if (coin.GetVelocity().X < 1)
+                        {
+                            coin.Accelerate(0, 0.5);
+                        }
+                    }
+                }
+
+                if(coin.IsCollided(playerSprite))
+                {
+                    coin.IsAlive = false;
+                    money += 1;
+                }
+                coin.MoveAndVanish(1920, 1080);
             }
 
             elapsedTime += 1;
@@ -388,18 +521,31 @@ namespace Darkness_Becomes_You
 
             spriteBatch.Begin();
 
-            foreach (LinkedList<LinkedList<Sprite>> listOfLists in activeSprites)
+            foreach (LinkedList<Sprite> list in activeBullets)
             {
-                foreach (LinkedList<Sprite> list in listOfLists)
+                foreach (Bullet bullet in list)
                 {
-                    foreach (Sprite sprite in list)
-                    {
-                        sprite.Draw(spriteBatch);
-                    }
+                    bullet.Draw(spriteBatch);
                 }
             }
 
+            foreach (LinkedList<Sprite> list in activeEnemies)
+            {
+                foreach (Enemy enemy in list)
+                {
+                    enemy.Draw(spriteBatch);
+                }
+            }
+
+            foreach (Coin coin in activeCoins)
+            {
+                coin.Draw(spriteBatch);
+            }
+
+            playerSprite.Draw(spriteBatch);
+
             spriteBatch.DrawString(Calibri, elapsedTime.ToString(), new Vector2(10, 10), Color.Black);
+            spriteBatch.DrawString(Calibri, money.ToString(), new Vector2(1840, 10), Color.Black);
 
             spriteBatch.End();
 
@@ -433,7 +579,6 @@ namespace Darkness_Becomes_You
                         enemyBulletSprite.UpperLeft = new Vector2((enemy.UpperLeft.X + enemy.GetCenter().X) - (enemyBulletSprite.GetWidth() / 2), (enemy.UpperLeft.Y + enemy.GetCenter().Y) - (enemyBulletSprite.GetHeight() / 2));
                         enemyBulletSprite.SetSpeedAndDirection(enemy.firingSpeed, Sprite.CalculateDirectionAngle(new Vector2((playerSprite.UpperLeft.X + playerSprite.GetWidth()) - (enemyBulletSprite.UpperLeft.X + enemyBulletSprite.GetWidth()), (playerSprite.UpperLeft.Y + playerSprite.GetWidth() / 2) - (enemyBulletSprite.UpperLeft.Y + enemyBulletSprite.GetWidth() / 2))) + enemy.firingDirection);
                         enemyBulletSprite.RotationAngle = enemyBulletSprite.GetDirectionAngle() + 90;
-                        enemyBulletSprite.friendly = false;
 
                         enemyBullets.AddLast(enemyBulletSprite);
 
@@ -472,7 +617,6 @@ namespace Darkness_Becomes_You
                         playerBulletSprite.SetTexture(playerBulletTexture);
                         playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (playerSprite.GetWidth() / 2) - (playerBulletSprite.GetWidth() / 2), playerSprite.UpperLeft.Y);
                         playerBulletSprite.SetSpeedAndDirection(10, 90);
-                        playerBulletSprite.friendly = true;
 
                         friendlyBullets.AddLast(playerBulletSprite);
 
@@ -490,7 +634,6 @@ namespace Darkness_Becomes_You
                         playerBulletSprite.SetTexture(playerBulletTexture);
                         playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (playerSprite.GetWidth() / 2) - (playerBulletSprite.GetWidth()), playerSprite.UpperLeft.Y);
                         playerBulletSprite.SetSpeedAndDirection(10, 90);
-                        playerBulletSprite.friendly = true;
 
                         friendlyBullets.AddLast(playerBulletSprite);
 
@@ -499,7 +642,6 @@ namespace Darkness_Becomes_You
                         playerBulletSprite.SetTexture(playerBulletTexture);
                         playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (playerSprite.GetWidth() / 2), playerSprite.UpperLeft.Y);
                         playerBulletSprite.SetSpeedAndDirection(10, 90);
-                        playerBulletSprite.friendly = true;
 
                         friendlyBullets.AddLast(playerBulletSprite);
 
@@ -519,7 +661,6 @@ namespace Darkness_Becomes_You
                             playerBulletSprite.SetTexture(playerBulletTexture);
                             playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (player.GetWidth() / 2) - (playerBulletSprite.GetWidth()), playerSprite.UpperLeft.Y);
                             playerBulletSprite.SetSpeedAndDirection(10, 90);
-                            playerBulletSprite.friendly = true;
 
                             friendlyBullets.AddLast(playerBulletSprite);
 
@@ -528,7 +669,6 @@ namespace Darkness_Becomes_You
                             playerBulletSprite.SetTexture(playerBulletTexture);
                             playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (player.GetWidth() / 2), playerSprite.UpperLeft.Y);
                             playerBulletSprite.SetSpeedAndDirection(10, 90);
-                            playerBulletSprite.friendly = true;
 
                             friendlyBullets.AddLast(playerBulletSprite);
 
@@ -545,7 +685,6 @@ namespace Darkness_Becomes_You
                         playerBulletSprite.SetTexture(playerBulletTexture);
                         playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (player.GetWidth() / 2) - (playerBulletSprite.GetWidth() / 2), playerSprite.UpperLeft.Y);
                         playerBulletSprite.SetSpeedAndDirection(10, 90);
-                        playerBulletSprite.friendly = true;
 
                         friendlyBullets.AddLast(playerBulletSprite);
 
@@ -570,7 +709,6 @@ namespace Darkness_Becomes_You
                             playerBulletSprite.SetTexture(playerBulletTexture);
                             playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (player.GetWidth() / 2) - (playerBulletSprite.GetWidth()), playerSprite.UpperLeft.Y);
                             playerBulletSprite.SetSpeedAndDirection(10, 90);
-                            playerBulletSprite.friendly = true;
 
                             friendlyBullets.AddLast(playerBulletSprite);
 
@@ -579,7 +717,6 @@ namespace Darkness_Becomes_You
                             playerBulletSprite.SetTexture(playerBulletTexture);
                             playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (player.GetWidth() / 2), playerSprite.UpperLeft.Y);
                             playerBulletSprite.SetSpeedAndDirection(10, 90);
-                            playerBulletSprite.friendly = true;
 
                             friendlyBullets.AddLast(playerBulletSprite);
 
@@ -588,7 +725,6 @@ namespace Darkness_Becomes_You
                             playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (player.GetWidth() / 2) + (playerBulletSprite.GetWidth() / 2), playerSprite.UpperLeft.Y);
                             playerBulletSprite.SetSpeedAndDirection(10, -90);
                             playerBulletSprite.ChangeRotationAngle(-180);
-                            playerBulletSprite.friendly = true;
 
                             friendlyBullets.AddLast(playerBulletSprite);
 
@@ -607,7 +743,6 @@ namespace Darkness_Becomes_You
                             playerBulletSprite.SetTexture(playerBulletTexture);
                             playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (player.GetWidth() / 2) - (playerBulletSprite.GetWidth()), playerSprite.UpperLeft.Y);
                             playerBulletSprite.SetSpeedAndDirection(10, 90);
-                            playerBulletSprite.friendly = true;
 
                             friendlyBullets.AddLast(playerBulletSprite);
 
@@ -616,7 +751,6 @@ namespace Darkness_Becomes_You
                             playerBulletSprite.SetTexture(playerBulletTexture);
                             playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (player.GetWidth() / 2), playerSprite.UpperLeft.Y);
                             playerBulletSprite.SetSpeedAndDirection(10, 90);
-                            playerBulletSprite.friendly = true;
 
                             friendlyBullets.AddLast(playerBulletSprite);
 
@@ -633,7 +767,6 @@ namespace Darkness_Becomes_You
                         playerBulletSprite.SetTexture(playerBulletTexture);
                         playerBulletSprite.UpperLeft = new Vector2(player.UpperLeft.X + (player.GetWidth() / 2) - (playerBulletSprite.GetWidth() / 2), playerSprite.UpperLeft.Y);
                         playerBulletSprite.SetSpeedAndDirection(10, 90);
-                        playerBulletSprite.friendly = true;
 
                         friendlyBullets.AddLast(playerBulletSprite);
 
