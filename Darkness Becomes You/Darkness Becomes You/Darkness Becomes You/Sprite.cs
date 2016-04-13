@@ -756,6 +756,10 @@ namespace SpriteLibrary
     public class Coin : Unit
     {
         public bool accelerating = true;
+        public bool magnetized = false;
+        public bool magnetizing = false;
+
+        public Vector2 diff;
     }
 
     public class Display : Sprite

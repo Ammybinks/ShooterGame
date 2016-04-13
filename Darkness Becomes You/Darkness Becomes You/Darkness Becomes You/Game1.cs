@@ -405,7 +405,7 @@ namespace Darkness_Becomes_You
                                 int coinDirection;
                                 int coinVelocity;
 
-                                for (int i = 0; i < enemy.coinsDropped;i++ )
+                                for (int i = 0; i < enemy.coinsDropped; i++)
                                 {
                                     coinDirection = coinRNG.Next(0, 360);
                                     coinVelocity = coinRNG.Next(1, 10);
@@ -445,11 +445,28 @@ namespace Darkness_Becomes_You
             }
             foreach (Coin coin in activeCoins)
             {
+                coin.diff.X = playerSprite.UpperLeft.X - coin.UpperLeft.X;
+                coin.diff.Y = playerSprite.UpperLeft.Y - coin.UpperLeft.Y;
+
+                if (coin.diff.X < 0)
+                {
+                    coin.diff.X = coin.diff.X * -1;
+                }
+                if (coin.diff.Y < 0)
+                {
+                    coin.diff.Y = coin.diff.Y * -1;
+                }
+
+                if ((coin.diff.X + coin.diff.Y) < 400)
+                {
+                    coin.magnetized = true;
+                }
+
+
                 if (coin.accelerating)
                 {
-                    if (((coin.GetVelocity().Y > 1)) && ((coin.GetVelocity().X < 0.5f) && (coin.GetVelocity().X > -0.5f)))
+                    if ((((coin.GetVelocity().Y > 1)) && ((coin.GetVelocity().X < 0.5f) && (coin.GetVelocity().X > -0.5f))))
                     {
-                        coin.MaxSpeed = 2;
                         coin.SetVelocity(0, 2);
                         coin.accelerating = false;
                     }
@@ -501,7 +518,17 @@ namespace Darkness_Becomes_You
                     }
                 }
 
-                if(coin.IsCollided(playerSprite))
+                if ((coin.magnetized) && (coin.accelerating == false))
+                {
+                    Vector2 direction = new Vector2(playerSprite.UpperLeft.X - coin.UpperLeft.X,
+                                                                   playerSprite.UpperLeft.Y - coin.UpperLeft.Y);
+
+                    double angle = Sprite.CalculateDirectionAngle(direction);
+
+                    coin.SetSpeedAndDirection(5, angle);
+                }
+
+                if (coin.IsCollided(playerSprite))
                 {
                     coin.IsAlive = false;
                     money += 1;
