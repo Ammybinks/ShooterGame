@@ -1,0 +1,3 @@
+C:\Users\Nye\Dropbox\Programming\C#\Programs\Darkness-Becomes-You\Darkness Becomes You\Darkness Becomes You\Darkness Becomes YouContent\obj\x86\Debug\Darkness Becomes YouContent.contentprojResolveAssemblyReference.cache
+D:\Users\nye\Documents\Programming\C#\Programs\Darkness-Becomes-You\Darkness Becomes You\Darkness Becomes You\Darkness Becomes YouContent\obj\x86\Debug\Darkness Becomes YouContent.contentprojResolveAssemblyReference.cache
+D:\Users\nye\Documents\Programming\C#\Programs\Darkness-Becomes-You - Copy (2)\Darkness Becomes You\Darkness Becomes You\Darkness Becomes YouContent\obj\x86\Debug\Darkness Becomes YouContent.contentprojResolveAssemblyReference.cache

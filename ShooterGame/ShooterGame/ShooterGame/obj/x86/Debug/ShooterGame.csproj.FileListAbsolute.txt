@@ -1,0 +1,24 @@
+D:\Users\nye\Documents\Programming\C#\Programs\Darkness-Becomes-You - Copy (2) - Copy\Darkness Becomes You\ShooterGame\ShooterGame\bin\x86\Debug\Content\Textures\Player.xnb
+D:\Users\nye\Documents\Programming\C#\Programs\Darkness-Becomes-You - Copy (2) - Copy\Darkness Becomes You\ShooterGame\ShooterGame\bin\x86\Debug\Content\Textures\PlayerBullet.xnb
+D:\Users\nye\Documents\Programming\C#\Programs\Darkness-Becomes-You - Copy (2) - Copy\Darkness Becomes You\ShooterGame\ShooterGame\bin\x86\Debug\Content\Textures\Enemy1.xnb
+D:\Users\nye\Documents\Programming\C#\Programs\Darkness-Becomes-You - Copy (2) - Copy\Darkness Becomes You\ShooterGame\ShooterGame\bin\x86\Debug\Content\Textures\EnemyBullet.xnb
+D:\Users\nye\Documents\Programming\C#\Programs\Darkness-Becomes-You - Copy (2) - Copy\Darkness Becomes You\ShooterGame\ShooterGame\bin\x86\Debug\Content\Textures\TheMunz.xnb
+D:\Users\nye\Documents\Programming\C#\Programs\Darkness-Becomes-You - Copy (2) - Copy\Darkness Becomes You\ShooterGame\ShooterGame\bin\x86\Debug\Content\Fonts\Calibri.xnb
+D:\Users\nye\Documents\Programming\C#\Programs\Darkness-Becomes-You - Copy (2) - Copy\Darkness Becomes You\ShooterGame\ShooterGame\bin\x86\Debug\Darkness Becomes You.exe
+D:\Users\nye\Documents\Programming\C#\Programs\Darkness-Becomes-You - Copy (2) - Copy\Darkness Becomes You\ShooterGame\ShooterGame\bin\x86\Debug\Darkness Becomes You.pdb
+D:\Users\nye\Documents\Programming\C#\Programs\Darkness-Becomes-You - Copy (2) - Copy\Darkness Becomes You\ShooterGame\ShooterGame\obj\x86\Debug\ShooterGame.csprojResolveAssemblyReference.cache
+D:\Users\nye\Documents\Programming\C#\Programs\Darkness-Becomes-You - Copy (2) - Copy\Darkness Becomes You\ShooterGame\ShooterGame\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+D:\Users\nye\Documents\Programming\C#\Programs\Darkness-Becomes-You - Copy (2) - Copy\Darkness Becomes You\ShooterGame\ShooterGame\obj\x86\Debug\Darkness Becomes You.exe
+D:\Users\nye\Documents\Programming\C#\Programs\Darkness-Becomes-You - Copy (2) - Copy\Darkness Becomes You\ShooterGame\ShooterGame\obj\x86\Debug\Darkness Becomes You.pdb
+D:\Users\nye\Documents\GitHub\ShooterGame\ShooterGame\ShooterGame\ShooterGame\bin\x86\Debug\Content\Textures\Player.xnb
+D:\Users\nye\Documents\GitHub\ShooterGame\ShooterGame\ShooterGame\ShooterGame\bin\x86\Debug\Content\Textures\PlayerBullet.xnb
+D:\Users\nye\Documents\GitHub\ShooterGame\ShooterGame\ShooterGame\ShooterGame\bin\x86\Debug\Content\Textures\Enemy1.xnb
+D:\Users\nye\Documents\GitHub\ShooterGame\ShooterGame\ShooterGame\ShooterGame\bin\x86\Debug\Content\Textures\EnemyBullet.xnb
+D:\Users\nye\Documents\GitHub\ShooterGame\ShooterGame\ShooterGame\ShooterGame\bin\x86\Debug\Content\Textures\TheMunz.xnb
+D:\Users\nye\Documents\GitHub\ShooterGame\ShooterGame\ShooterGame\ShooterGame\bin\x86\Debug\Content\Fonts\Calibri.xnb
+D:\Users\nye\Documents\GitHub\ShooterGame\ShooterGame\ShooterGame\ShooterGame\bin\x86\Debug\Darkness Becomes You.exe
+D:\Users\nye\Documents\GitHub\ShooterGame\ShooterGame\ShooterGame\ShooterGame\bin\x86\Debug\Darkness Becomes You.pdb
+D:\Users\nye\Documents\GitHub\ShooterGame\ShooterGame\ShooterGame\ShooterGame\obj\x86\Debug\ShooterGame.csprojResolveAssemblyReference.cache
+D:\Users\nye\Documents\GitHub\ShooterGame\ShooterGame\ShooterGame\ShooterGame\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+D:\Users\nye\Documents\GitHub\ShooterGame\ShooterGame\ShooterGame\ShooterGame\obj\x86\Debug\Darkness Becomes You.exe
+D:\Users\nye\Documents\GitHub\ShooterGame\ShooterGame\ShooterGame\ShooterGame\obj\x86\Debug\Darkness Becomes You.pdb
